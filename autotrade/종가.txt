@@ -1,0 +1,36 @@
+2022-02-18 09:00:00    49530000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    49049000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    49088000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    49126000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    49178000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    49142000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    48664000.0
+Name: close, dtype: float64
+
+2022-02-19 09:00:00    48752000.0
+Name: close, dtype: float64
+
+2022-02-20 09:00:00    49000000.0
+Name: close, dtype: float64
+
+2022-02-21 09:00:00    47219000.0
+Name: close, dtype: float64
+
+2022-02-21 09:00:00    46616000.0
+Name: close, dtype: float64
+
+2022-02-22 09:00:00    45525000.0
+Name: close, dtype: float64
+

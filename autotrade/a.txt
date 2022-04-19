@@ -1,0 +1,3 @@
+cd Desktop/project
+conda activate myenv
+python test.py

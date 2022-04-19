@@ -35,12 +35,6 @@ def get_start_time(ticker):
     start_time = df.index[0]
     return start_time
 
-def get_ma15(ticker):
-    """15일 이동 평균선 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=15)
-    ma15 = df['close'].rolling(15).mean().iloc[-1]
-    return ma15
-
 def get_balance(ticker):
     """잔고 조회"""
     balances = upbit.get_balances()
@@ -104,7 +98,19 @@ def find_k():
             ror_ = ror
             result = k
     best_k = result
-    
+schedule.every().day.at("08:59").do(find_k)
+
+def profit_and_loss(t):
+    """손익계산"""
+    if t == 0:
+        start_balances = get_balance("KRW-BTC")
+    if t == 1:
+        end_balances = get_balance("KRW-BTC")
+    if t == 2:
+        post_message(myToken,"#자동투자", datetime.datetime.now().date() + " 손익 : " + str(start_balances - end_balances))
+schedule.every().day.at("09:00").do(profit_and_loss(0))
+schedule.every().day.at("08:59:30").do(profit_and_loss(1))
+schedule.every().day.at("08:59:50").do(profit_and_loss(2))
 
 
 # MAIN ----------------------------------------------------------------------------------------------------------------------------------------
@@ -115,8 +121,6 @@ print("autotrade start")
 # 시작 메세지 슬랙 전송
 post_message(myToken,"#자동투자_ai_칼손절", "autotrade start")
 
-schedule.every().day.at("8:59").do(find_k)
-
 while True:
     try:
         now = datetime.datetime.now()
@@ -124,11 +128,10 @@ while True:
         end_time = start_time + datetime.timedelta(days=1)
         schedule.run_pending()
 
-        if start_time < now < end_time - datetime.timedelta(seconds=10):
+        if start_time < now < end_time - datetime.timedelta(minutes=1):
             target_price = get_target_price("KRW-BTC", best_k)
-            ma15 = get_ma15("KRW-BTC")
             current_price = get_current_price("KRW-BTC")
-            if target_price < current_price and current_price < predicted_close_price and ma15 < current_price:
+            if target_price < current_price and current_price < predicted_close_price:
                 krw = start_price()
                 if krw > 5000:
                     buy_result = upbit.buy_market_order("KRW-BTC", krw*0.9995)
