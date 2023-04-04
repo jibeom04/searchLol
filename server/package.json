@@ -1,0 +1,18 @@
+{
+  "name": "project",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "jibeom",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  }
+}
