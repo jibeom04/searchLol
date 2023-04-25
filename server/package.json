@@ -3,16 +3,15 @@
   "version": "0.0.1",
   "description": "",
   "main": "app.js",
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js`"
   },
   "author": "jibeom",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.18.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
   }
 }

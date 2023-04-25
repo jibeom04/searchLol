@@ -1,10 +1,21 @@
 const port = 80;
 const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser')
 const morgan = require('morgan');
 
 const app = express();
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/html/main.html'));
+});
+
+app.post('/search', (req, res) => {
+  // let username = req.body.username;
+  res.send(req.body);
+});
 
 // 404 미들웨어 ----------------------------------------------------------------------------------
 app.use((req, res, next) => {
