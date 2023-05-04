@@ -1,11 +1,12 @@
-const riot_api_key = 'RGAPI-be10431b-61b7-4dd2-8119-f89938c68597'
+require('dotenv').config();
+
+const riot_api_key = process.env.riot_api_key;  
 
 const port = 80;
 
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
-const request = require('sync-request');
+const axios = require('axios');
 const urlencode = require('urlencode');
 const morgan = require('morgan');
 
@@ -16,26 +17,49 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(morgan('dev'));
 
-// app.use('/', express.static(path.join(__dirname, '../client/html/main.html')));
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/html/main.html'));
 });
 
-app.post('/search', (req, res) => {
+app.post('/search', async (req, res, next) => {
   const username = req.body.username;
-  var puuid;
-  const find_PUUID_url = 'https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + riot_api_key;
-  request(find_PUUID_url, (err, res, body) => {
-    const info_json = JSON.parse(body);
-    // const key = Object.keys(info_json);
-    // puuid = info_json[key]["id"];
-    puuid = info_json.puuid;
-    console.log(puuid);
-  });
-  res.send(puuid);
-  console.log(puuid);
-});
+  const puuid_url = 'https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + username + '?api_key=' + riot_api_key;
+  const summoner_info = await axios.get(puuid_url);
+  const puuid = summoner_info.data.puuid;
+
+  const matchid_url = 'https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/'+puuid+'/ids?start=0&count=20&api_key=' + riot_api_key;
+  const matchid_all = await axios.get(matchid_url);
+  const matchids = matchid_all.data;
+  const matchid_length = matchids.length;
+
+  let match_urls = new Array(matchid_length);
+
+  for(let i=0; i<10; i++) {
+    match_urls[i] = 'https://asia.api.riotgames.com/lol/match/v5/matches/'+matchids[i]+'?api_key='+riot_api_key;
+  }
+
+  let matches = new Object();
+  
+  const requests = match_urls.map(url => axios.get(url));
+
+  await axios.all(requests)
+  .then(res => {
+    for(let i=0; i<10; i++) {
+      matches[i] = res[i].data;
+    }
+  })
+  .catch(err => {
+    next(err);
+  })
+
+  matches_json = JSON.stringify(matches);
+
+  console.log(`PUUID = ${puuid}`);
+  console.log(`matchids = ${matchids}`);
+
+  // res.send(matches[0].metadata.matchId);
+
+})
 
 // 404 미들웨어 ----------------------------------------------------------------------------------
 app.use((req, res, next) => {
