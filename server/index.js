@@ -10,16 +10,9 @@ require('dotenv').config();
 const riot_api_key = process.env.riot_api_key;
 
 let matches = {};
-let info = {
-  // name,
-  // item0,
-  // item1,
-  // item2,
-  // item3,
-  // item4,
-  // item5,
 
-};
+// participants, gameMode, gameType
+let info = {};
 
 function sleep(ms) {
   const looptime = Date.now() + ms;
@@ -38,6 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/search', async (req, res, next) => {
+
   const username = req.body.username;
   const puuid_url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${riot_api_key}`;
   let summoner_info, puuid;
@@ -45,18 +39,28 @@ app.post('/search', async (req, res, next) => {
     summoner_info = await axios.get(puuid_url);
     puuid = summoner_info.data.puuid;
   } catch(err) {
-    next(err);
-  };
+    if(err.response.status == 404) {
+      res.write(`<script>alert("Can't find user")</script>`);
+      res.write("<script>window.location = '/'</script>");
+      return;
+    }
+    else if(err.response.status == 403) {
+      res.write(`<script>alert("Invalid key")</script>`);
+      res.write("<script>window.location = '/'</script>");
+      return;
+    }
+  }
 
   const matchid_url = `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${riot_api_key}`;
-  let matchid_all, matchids
+  let matchid_all, matchids, matchid_length;
   try {
     matchid_all = await axios.get(matchid_url);
     matchids = matchid_all.data;
+    matchid_length = matchids.length;
   } catch(err) {
     next(err);
   };
-  const matchid_length = matchids.length;
+  
 
   let match_urls = [];
 
@@ -67,9 +71,9 @@ app.post('/search', async (req, res, next) => {
   const requests = match_urls.map(url => axios.get(url));
 
   sleep(1000);
-
+  
   try {
-    await axios.all(requests)
+    await axios.all(requests, requests, requests,requests, requests, requests,requests, requests, requests,requests, requests, requests)
     .then(res => {
       for(let i=0; i<matchid_length; i++) {
         matches[i] = res[i].data;
@@ -84,12 +88,16 @@ app.post('/search', async (req, res, next) => {
   // console.log(`PUUID = ${puuid}`);
   // console.log(`matchids = ${matchids}`);
 
-  // res.send(matches);
-  res.redirect('/search');
+  res.send(matches[0].info.participants[0].summonerName);
+  // res.send(`${Object.keys(matches[0].info)}`);
+  // res.send(`${matches[0].info.gameType}`);
+
+
+  // res.redirect('/search');
 });
 
 app.get('/search', (req, res, next) => {
-  res.send(matches);
+
 });
 
 // 404 미들웨어 ----------------------------------------------------------------------------------
