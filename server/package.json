@@ -2,17 +2,17 @@
   "name": "project",
   "version": "0.0.1",
   "description": "",
-  "main": "app.js",
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  },
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon index.js"
   },
   "author": "jibeom",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
   }
 }
