@@ -26,6 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(morgan('dev'));
 
+app.use(express.static(path.join(__dirname, '../client')))
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/html/main.html'));
 });
