@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>롤 전적 검색</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
     <div class="design">
@@ -11,13 +11,20 @@
         <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fcafefiles.naver.net%2FMjAxOTA5MThfMjgy%2FMDAxNTY4ODEwMTg4MTE5.va7lJexpD36xfXnlDO5yYXnhLpLNWJydf0wrfdNjR5Ig.Iyw6AQjl5k8TPHOkWasrwpPYifbD6i9I3GcABOaJYzkg.JPEG%2FexternalFile.jpg&type=sc960_832">
         <span style="font-size: 100px;">롤 전적 검색</span>
       </div>
+
       <div class="title">
         <div style="font-size: 40px">소환사의 이름을 입력하세요</div>
-        <form action="/search" method="post">
-          <input type="text" id="summoner" value="">
-          <button id="submit" class="submit-btn" type="submit">Submit</button>
-        </form>
       </div>
+
+      <form action="/search" method="post">
+        <div class="title">
+          <input class="input" type="text" name="username">
+        </div>
+        
+        <div class="title">
+          <input class="submit-btn" type="submit" value="검색">
+        </div>
+      </form>
     </div>
   </body>
 </html>
